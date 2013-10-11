@@ -1,4 +1,4 @@
-define(function (require, exports) {
+define(function (require, exports, module) {
   var Ubb = function () {
     if (!(this instanceof Ubb)) {
       return new Ubb();
