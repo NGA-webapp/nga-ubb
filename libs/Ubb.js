@@ -49,7 +49,7 @@ define(function (require, exports, module) {
    * @return {string}         转换后的内容
    */
   Ubb.prototype._toHtml = function (content, tagName) {
-    var reg;
+    var reg, parser;
     if (!(tagName in this._tags)) {
       return content;
     }
@@ -60,7 +60,6 @@ define(function (require, exports, module) {
       // TODO
       reg = new RegExp(/\[test([^\]]*)\]((?:(?!(?:\[test\]|\[\/test\])).)*)\[\/test\]/gi);
     }
-    console.log(reg);
     return this._parse(reg, content, parser, 0);
   };
 
