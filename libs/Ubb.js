@@ -126,6 +126,22 @@ define(function (require, exports, module) {
   };
 
   /**
+   * 将危险字符编码
+   * @param  {string} content 需要编码的内容
+   * @return {string}         编码后的内容
+   */
+  Ubb.prototype._escape = function (content) {
+    if (content) {
+      content = content.replace(/&/igm, '&amp;');
+      content = content.replace(/</igm, '&lt;');
+      content = content.replace(/>/igm, '&gt;');
+      content = content.replace(/\"/igm, '&quot;');
+      content = content.replace(/\'/igm, '&apos;');
+    }
+    return content;
+  };
+
+  /**
    * 将内容通过单类标记转换为html格式
    * @param  {string} content 需要转换的内容
    * @param  {string} tagName 需要转换的标记
@@ -148,6 +164,7 @@ define(function (require, exports, module) {
    */
   Ubb.prototype.toHtml = function (content) {
     var tagName;
+    content = this._escape(content);
     for (tagName in this._tags) {
       content = this._toHtml(content, tagName);
     }
@@ -187,6 +204,7 @@ define(function (require, exports, module) {
     self._tags[options.tagName] = options;
     return self;
   };
+
 
   // TODO 如 ===h=== 为标题
   Ubb.prototype.extra = function () {

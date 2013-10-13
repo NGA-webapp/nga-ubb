@@ -1,6 +1,6 @@
 define(function (require, exports, module) {
   return function (ubb) {
-    describe.only('tags', function () {
+    describe('tags', function () {
       require('./font')(ubb);
       require('./layout')(ubb);
       require('./list')(ubb);

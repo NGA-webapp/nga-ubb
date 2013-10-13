@@ -65,7 +65,7 @@ define(function (require, exports, module) {
           ubb = new Ubb();
           ubb.set(testTag.pair);
           text = '[test foo=120%;"> data-height="]sth[/test]';
-          output = '[test foo=120%;"> data-height="]sth[/test]';
+          output = '<div class="test" data-foo="120%;&quot;&gt;">sth</div>';
           test(ubb, text, output);
         });
       });
