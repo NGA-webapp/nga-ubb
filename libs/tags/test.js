@@ -1,9 +1,24 @@
 define(function (require, exports, module) {
-  return {
+  exports.pair = {
     tagName: 'test',
     isPair: true,
-    parser: function (content, attr) {
-      return '<div class="test" data-foo="' + attr + '">' + content + '</div>';
+    parser: function (content, attrs) {
+      var data = '';
+      if (!attrs.nop && ('foo' in attrs.dict)) {
+        data = ' data-foo="' + attrs.dict.foo + '"';
+      }
+      return '<div class="test"' + data + '>' + content + '</div>';
+    }
+  };
+  exports.single = {
+    tagName: 'test',
+    isPair: false,
+    parser: function (attrs) {
+      var data = '';
+      if (!attrs.nop && ('foo' in attrs.dict)) {
+        data = ' data-foo="' + attrs.dict.foo + '"';
+      }
+      return '<div class="test"' + data + '>single</div>';
     }
   };
 });

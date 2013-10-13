@@ -1,16 +1,80 @@
 define(function (require, exports, module) {
-  var MAXNESTING = 100; // 单类标记最多嵌套数
+  var MAXNESTING = 100; // 单类标记最多解析数
+
+  /**
+   * 去除头尾多余空白符
+   * @param  {string} str
+   * @return {string}
+   */
+  var trim = function (str) {
+    if (typeof str !== 'string') {
+      return '';
+    }
+    return str.replace(/(^\s*)|(\s*$)/g, "");
+  };
 
   /**
    * 获取匹配成对出现的ubb标签无内嵌套的正则表达式
    * @param  {string} tagName 标签名
    * @return {RegExp}         匹配的正则表达式
    */
-  var pairReg = function (tagName) {
-    // e.g.: new RegExp(/\[test([^\]]*)\]((?:(?!(?:\[test\]|\[\/test\])).)*)\[\/test\]/gi);
-    return new RegExp('\\[' + tagName + '([^\\]]*)\\]((?:(?!(?:\\[' + tagName + '\\]|\\[\\\/' + tagName + '\\])).)*)\\[\\\/' + tagName + '\\]', 'gi');
+  var pairReg = exports.pairReg = function (tagName) {
+    // e.g.: new RegExp(/\[test((?:[=\s][^\]]*)?)\]((?:(?!(?:\[test\]|\[\/test\])).)*)\[\/test\]/gi);
+    return new RegExp('\\[' + tagName + '((?:[=\\s][^\\]]*)?)\\]((?:(?!(?:\\[' + tagName + '\\]|\\[\\\/' + tagName + '\\])).)*)\\[\\\/' + tagName + '\\]', 'gi');
   };
 
+  /**
+   * 获取匹配单个出现的ubb标签的正则表达式
+   * @param  {string} tagName 标签名
+   * @return {RegExp}         匹配的正则表达式
+   */
+  var singleReg = exports.singleReg = function (tagName) {
+    // e.g.: new RegExp(/\[test((?:[=\s][^\]]*)?)\]/gi);
+    return new RegExp('\\[' + tagName + '((?:[=\\s][^\\]]*)?)\\]', 'gi');
+  };
+
+  /**
+   * 将字符串形式的标记属性转换为便于使用的格式
+   * @param  {string} attrStr 字符串形式的标记属性，如'=value', ' foo=bar', ' foo bar'
+   * @return {object}         便于使用的标记属性
+   *                          {
+   *                            nop: false, // 当该值为真时表示无任何属性值
+   *                            value: '',  // 当该值不为undefined时表示有[tag=value]形式的唯一值
+   *                            arr: [], // [tag foo bar]或[tag foo bar=baz]形式中按顺序存入该数组，如返回[foo, bar], [foo, bar=baz]
+   *                            dict: {} // [tag ...]形式中属性含有键名时存入该对象，如[tag foo bar=baz]返回{bar: baz}
+   *                          }
+   */
+  var getAttrs = function (attrStr) {
+    var result = {};
+    var attrArr = [];
+    var i, len;
+    var equ, key, val;
+    if (typeof attrStr !== 'string' || trim(attrStr) === '') {
+      // 无属性
+      result.nop = true;
+    } else if (attrStr.match(/^=/)) {
+      // [tag=value]
+      result.value = attrStr.slice(1);
+    } else if (attrStr.match(/^\s/)) {
+      // [tag ...]
+      result.arr = [];
+      result.dict = {};
+      attrArr = trim(attrStr).split(' ');
+      for (i = 0, len = attrArr.length; i < len; i++) {
+        // [tag foo bar]
+        result.arr.push(attrArr[i]);
+        equ = attrArr[i].indexOf('=');
+        if (equ !== -1) {
+          // [tag foo=bar baz=abc]
+          // [tag foo bar=baz]
+          key = attrArr[i].slice(0, equ);
+          val = attrArr[i].slice(equ + 1);
+          result.dict[key] = val;
+        }
+      }
+    }
+    return result;
+  };
 
   var Ubb = function () {
     if (!(this instanceof Ubb)) {
@@ -20,26 +84,45 @@ define(function (require, exports, module) {
     return this;
   };
   /**
-   * 递归解析单类标记
-   * @param  {string} content 需要解析的内容
-   * @return {string}     解析后的内容
+   * 创建对某段文本进行递归解析单类标记的方法
+   * @param {string} tagName 标记名
+   * @param  {function} parser 该标记的解析器
+   * @param {boolean} isPair 该标记是否成对出现
+   * @return {function}     对某段文本进行递归解析单类标记的方法
    */
-  Ubb.prototype._parse = function (reg, str, parser, nest) {
-    var result, startAt, endAt, attrStr, content;
-    reg.lastIndex = 0;
-    result = reg.exec(str);
-    if (!result) {
-      return str;
-    }
-    startAt = reg.lastIndex - result[0].length;
-    endAt = reg.lastIndex;
-    attrStr = result[1];
-    content = result[2];
-    str = str.slice(0, startAt) + parser(content, attrStr) + str.slice(endAt);
-    if (++nest >= MAXNESTING) {
-      return str;
-    }
-    return this._parse(reg, str, parser, nest);
+  Ubb.prototype._buildExec = function (tagName, parser, isPair) {
+    var reg;
+    reg = isPair ? pairReg(tagName) : singleReg(tagName);
+
+    /**
+     * 对某段文本进行递归解析单类标记
+     * @param  {string} str 需要解析的内容
+     * @param {number} nest 当前解析次数，当大于设置的最大值时跳出递归，避免发生死循环
+     * @return {string}     解析后的内容
+     */
+    var _exec = function (str, nest) {
+      var result, startAt, endAt, attrStr, attrs, content;
+      reg.lastIndex = 0;
+      result = reg.exec(str);
+      if (!result) {
+        return str;
+      }
+      startAt = reg.lastIndex - result[0].length;
+      endAt = reg.lastIndex;
+      attrStr = result[1];
+      attrs = getAttrs(attrStr);
+      if (isPair) {
+        content = result[2];
+        str = str.slice(0, startAt) + parser(content, attrs) + str.slice(endAt);
+      } else {
+        str = str.slice(0, startAt) + parser(attrs) + str.slice(endAt);
+      }
+      if (++nest >= MAXNESTING) {
+        return str;
+      }
+      return _exec(str, nest);
+    };
+    return _exec;
   };
 
   /**
@@ -49,18 +132,13 @@ define(function (require, exports, module) {
    * @return {string}         转换后的内容
    */
   Ubb.prototype._toHtml = function (content, tagName) {
-    var reg, parser;
+    var parser, isPair;
     if (!(tagName in this._tags)) {
       return content;
     }
     parser = this._tags[tagName].parser;
-    if (this._tags[tagName].isPair) {
-      reg = pairReg(tagName);
-    } else {
-      // TODO
-      reg = new RegExp(/\[test([^\]]*)\]((?:(?!(?:\[test\]|\[\/test\])).)*)\[\/test\]/gi);
-    }
-    return this._parse(reg, content, parser, 0);
+    isPair = this._tags[tagName].isPair;
+    return this._buildExec(tagName, parser, isPair)(content, 0);
   };
 
   /**
@@ -110,5 +188,5 @@ define(function (require, exports, module) {
     return self;
   };
 
-  module.exports = Ubb;
+  exports.Ubb = Ubb;
 });
