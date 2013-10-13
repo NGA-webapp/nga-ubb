@@ -27,7 +27,7 @@ define(function (require, exports) {
     tagName: 'del',
     isPair: true,
     parser: function (content) {
-      return '<del class="gray">' + content + '</del>';
+      return '<del>' + content + '</del>';
     }
   };
 
@@ -66,7 +66,7 @@ define(function (require, exports) {
     isPair: true,
     parser: function (content, attrs) {
       if (!attrs.nop && typeof attrs.value === 'string') {
-        return '<span style="font-size: ' + attrs.value + '; line-height: 183%;">' + content + '</span>';
+        return '<span style="font-size: ' + attrs.value + ';">' + content + '</span>';
       }
       return content;
     }
@@ -77,7 +77,10 @@ define(function (require, exports) {
     isPair: true,
     parser: function (content, attrs) {
       if (!attrs.nop && typeof attrs.value === 'string') {
-        return '<div style="text-align: ' + attrs.value + ';">' + content + '</div>';
+        switch (attrs.value) {
+          case 'left': case 'right': case 'center':
+          return '<div style="text-align: ' + attrs.value + ';">' + content + '</div>';
+        }
       }
       return content;
     }

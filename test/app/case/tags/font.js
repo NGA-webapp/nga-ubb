@@ -18,7 +18,7 @@ define(function (require, exports, module) {
       output = '<i>sth here.</i>';
       test(ubb, text, output);
       text = '[del]sth here.[/del]';
-      output = '<del class="gray">sth here.</del>';
+      output = '<del>sth here.</del>';
       test(ubb, text, output);
       text = '[h]sth here.[/h]';
       output = '<h4>sth here.</h4>';
@@ -30,7 +30,7 @@ define(function (require, exports, module) {
       output = '<span class="coral">sth here.</span>';
       test(ubb, text, output);
       text = '[size=120%]sth here.[/size]';
-      output = '<span style="font-size: 120%; line-height: 183%;">sth here.</span>';
+      output = '<span style="font-size: 120%;">sth here.</span>';
       test(ubb, text, output);
       text = '[align=left]sth here.[/align]';
       output = '<div style="text-align: left;">sth here.</div>';

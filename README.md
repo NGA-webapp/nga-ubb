@@ -20,8 +20,8 @@ both jquery and seajs are required.
     - [align] 左/中/右对齐 √
     - [h] 段落标题 √
     - [l/r] 左/右浮动 √
-    - [list] 列表条目
-    - [img] 插入图片
+    - [list] 列表条目 √
+    - [img] 插入图片 √
     - [album] 插入相册
     - [url] 插入链接
     - [quote] 引用文字

@@ -1,7 +1,9 @@
 define(function (require, exports) {
   var Ubb = require('./Ubb').Ubb;
   var font = require('./tags/font');
-  var float = require('./tags/float');
+  var layout = require('./tags/layout');
+  var list = require('./tags/list');
+  var img = require('./tags/img');
   var ubb = new Ubb();
   ubb.set(font.b);
   ubb.set(font.u);
@@ -12,7 +14,11 @@ define(function (require, exports) {
   ubb.set(font.color);
   ubb.set(font.size);
   ubb.set(font.align);
-  ubb.set(float.l);
-  ubb.set(float.r);
+  ubb.set(layout.l);
+  ubb.set(layout.r);
+  ubb.set(layout.quote);
+  ubb.set(layout.code);
+  ubb.set(list.list);
+  ubb.set(img.img);
   return ubb;
 });
