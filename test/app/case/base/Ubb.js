@@ -60,6 +60,14 @@ define(function (require, exports, module) {
           output = '<div class="test">single</div>sth outside here.[/test]';
           test(ubb, text, output);
         });
+        describe('be safe', function () {
+          var ubb, text, output;
+          ubb = new Ubb();
+          ubb.set(testTag.pair);
+          text = '[test foo=120%;"> data-height="]sth[/test]';
+          output = '[test foo=120%;"> data-height="]sth[/test]';
+          test(ubb, text, output);
+        });
       });
     });
   };

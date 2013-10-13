@@ -188,5 +188,10 @@ define(function (require, exports, module) {
     return self;
   };
 
+  // TODO 如 ===h=== 为标题
+  Ubb.prototype.extra = function () {
+
+  };
+
   exports.Ubb = Ubb;
 });

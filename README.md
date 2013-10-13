@@ -10,15 +10,15 @@ both jquery and seajs are required.
     - [[]] 游戏数据库
     - [armory] 魔兽世界人物信息
     - [url] Diablo3人物信息
-    - [color] 文字颜色
-    - [size] 文字大小
-    - [font] 文字字体
-    - [b] 粗体文字
-    - [u] 下划线文字
-    - [i] 斜体文字
-    - [del] 删除线
-    - [align] 左/中/右对齐
-    - [h] 段落标题
+    - [color] 文字颜色 √
+    - [size] 文字大小 √
+    - [font] 文字字体 √
+    - [b] 粗体文字 √
+    - [u] 下划线文字 √
+    - [i] 斜体文字 √
+    - [del] 删除线 √
+    - [align] 左/中/右对齐 √
+    - [h] 段落标题 √
     - [l/r] 左/右浮动
     - [list] 列表条目
     - [img] 插入图片
