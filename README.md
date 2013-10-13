@@ -24,8 +24,8 @@ both jquery and seajs are required.
     - [img] 插入图片 √
     - [album] 插入相册
     - [url] 插入链接
-    - [quote] 引用文字
-    - [code] 程序代码
+    - [quote] 引用文字 √
+    - [code] 程序代码 √
     - [flash] 插入flash(视频)
     - [table] 插入表格
     - [tid/pid] 主题/回复
