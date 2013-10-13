@@ -19,7 +19,7 @@ both jquery and seajs are required.
     - [del] 删除线 √
     - [align] 左/中/右对齐 √
     - [h] 段落标题 √
-    - [l/r] 左/右浮动
+    - [l/r] 左/右浮动 √
     - [list] 列表条目
     - [img] 插入图片
     - [album] 插入相册
