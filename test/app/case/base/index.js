@@ -1,7 +1,8 @@
 define(function (require, exports, module) {
-  return function (Ubb, testTag) {
+  return function (UbbThings, testTag) {
     describe('base', function () {
-      require('./Ubb')(Ubb, testTag);
+      require('./reg')(UbbThings);
+      require('./Ubb')(UbbThings.Ubb, testTag);
     });
   };
 });
