@@ -1,10 +1,14 @@
-# ubb for nga
-## evn
-require seajs
+# ubb for nga-webapp
+nga的ubb设计较为杂乱，其本身的代码不便于移植，与一般的ubb规则也有所不同，所以需要重新设计一套可维护的nga-ubb解析器。以主要用于[nga-webapp](https://github.com/imyelo/nga-webapp)项目。
+## 依赖
+默认前端环境中已包含[seajs](https://github.com/seajs/seajs)。  
+测试依赖于[mocha](http://visionmedia.github.com/mocha/) + [chai](http://chaijs.com/api/bdd/) (bdd) + [sinon](http://sinonjs.org/docs/)。  
+此外，尽量不依赖任何第三方类库。  
 
 ## todo
+标签类型繁多，但实际使用覆盖率低，因此优先处理常用部分。
 
-+ tags
++ 所有标签
     - [customachieve] 自定义成就
     - [[]] 游戏数据库
     - [armory] 魔兽世界人物信息
@@ -34,4 +38,3 @@ require seajs
     - [randomblock] 插入随机段落
     - [@用户名] 发送提醒
     - [t.178.com] 引用178尾巴
-
