@@ -144,16 +144,14 @@ define(function (require, exports, module) {
   /**
    * 将内容通过单类标记转换为html格式
    * @param  {string} content 需要转换的内容
-   * @param  {string} tagName 需要转换的标记
+   * @param  {string} tag 设置的标记规则
    * @return {string}         转换后的内容
    */
-  Ubb.prototype._toHtml = function (content, tagName) {
-    var parser, isPair;
-    if (!(tagName in this._tags)) {
-      return content;
-    }
-    parser = this._tags[tagName].parser;
-    isPair = this._tags[tagName].isPair;
+  Ubb.prototype._toHtml = function (content, tag) {
+    var tagName, parser, isPair;
+    tagName = tag.tagName;
+    parser = tag.parser;
+    isPair = tag.isPair;
     return this._buildExec(tagName, parser, isPair)(content, 0);
   };
 
@@ -163,10 +161,14 @@ define(function (require, exports, module) {
    * @return {string}         转换后的内容
    */
   Ubb.prototype.toHtml = function (content) {
-    var tagName;
+    var priority, tagName, i, len;
     content = this._escape(content);
-    for (tagName in this._tags) {
-      content = this._toHtml(content, tagName);
+    for (priority in this._tags) {
+      for (tagName in this._tags[priority]) {
+        for (i = 0, len = this._tags[priority][tagName].length; i < len; i++) {
+          content = this._toHtml(content, this._tags[priority][tagName][i]);
+        }
+      }
     }
     return content;
   };
@@ -177,7 +179,8 @@ define(function (require, exports, module) {
    *                     {
    *                       tagName: '', // 标签名
    *                       parser: function (content, attr) {}, // 解析器，也可以直接为一个字符串
-   *                       isPair: true // 是否成对出现
+   *                       isPair: true, // 是否成对出现
+   *                       priority: 1, // 优先处理级别
    *                     }
    * @return {Ubb} this
    * @chainable
@@ -187,21 +190,28 @@ define(function (require, exports, module) {
     var defaults = {
       tagName: '',
       parser: function (content, attr) {},
-      isPair: true
+      isPair: true,
+      priority: 1
     };
     // var options = $.extend({}, defaults, tag);
     var options = {
       tagName: typeof tag.tagName === 'undefined' ? defaults.tagName : tag.tagName,
       parser: typeof tag.parser === 'undefined' ? defaults.parser : tag.parser,
       isPair: typeof tag.isPair === 'undefined' ? defaults.isPair : tag.isPair,
+      priority: typeof tag.priority === 'undefined' ? defaults.priority : tag.priority,
     };
     if (!options.tagName) {
       throw new Error('the tag name could not be empty.');
     }
-    if (options.tagName in self._tags) {
-      throw new Error('the tag has been defined.');
+    // 允许同名标签存在，并按优先级处理，如没有设置优先级，则按加入顺序再处理。具体实现为以下这样的数组。
+    // 此外 优先级默认为1，也就是说可能不存在数组名为0，而且应按优先级值从大到小处理，需要注意。
+    if (!self._tags[options.priority]) {
+      self._tags[options.priority] = {};
     }
-    self._tags[options.tagName] = options;
+    if (!self._tags[options.priority][options.tagName]) {
+      self._tags[options.priority][options.tagName] = [];
+    }
+    self._tags[options.priority][options.tagName].push(options);
     return self;
   };
 
