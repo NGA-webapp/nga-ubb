@@ -17,7 +17,7 @@ define(function (require, exports, module) {
         describe('pair', function () {
           var ubb, text, output;
           ubb = new Ubb();
-          ubb.set(testTag.pair);
+          ubb.add(testTag.pair);
           text = '[test]sth here.[/test]';
           output = '<div class="test">sth here.</div>';
           test(ubb, text, output);
@@ -46,7 +46,7 @@ define(function (require, exports, module) {
         describe('single', function () {
           var ubb, text, output;
           ubb = new Ubb();
-          ubb.set(testTag.single);
+          ubb.add(testTag.single);
           text = '[test]';
           output = '<div class="test">single</div>';
           test(ubb, text, output);
@@ -63,7 +63,7 @@ define(function (require, exports, module) {
         describe('stringParser', function () {
           var ubb, text, output;
           ubb = new Ubb();
-          ubb.set(testTag.stringParser);
+          ubb.add(testTag.stringParser);
           text = '[test]';
           output = 'super';
           test(ubb, text, output);
@@ -80,7 +80,7 @@ define(function (require, exports, module) {
         describe('be safe', function () {
           var ubb, text, output;
           ubb = new Ubb();
-          ubb.set(testTag.pair);
+          ubb.add(testTag.pair);
           text = '[test foo=120%;"> data-height="]sth[/test]';
           output = '<div class="test" data-foo="120%;&quot;&gt;">sth</div>';
           test(ubb, text, output);

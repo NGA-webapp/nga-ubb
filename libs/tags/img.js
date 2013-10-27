@@ -4,11 +4,25 @@ define(function (require, exports) {
     isPair: true,
     parser: function (content) {
       // todo: ajsize
-      var image = '<img src="' + content + '" onerror="this.nextSibling.style.display=\'inline\';" />';
-      var span = '<span class="silver" style="display:none;"> [ ' + content + ' ] </span>';
-      return image + span;
-    }
+      var image = '<img src="' + content + '" onerror="" />';
+      return image;
+    },
+    priority: 1,
+  };
+  // 修正使用相对路径的img标签
+  var relativeImg = {
+    tagName: 'img',
+    isPair: true,
+    parser: function (content) {
+      var match = content.match(/^\.?\/([\s\S]*)/);
+      if (match && match.length > 1) {
+        return '[img]http://bbs.ngacn.cc/' + match[1] + '[/img]';
+      }
+      return '[img]' + content + '[/img]';
+    },
+    priority: 2,
   };
 
   exports.img = img;
+  exports.relativeImg = relativeImg;
 });

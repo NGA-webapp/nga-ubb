@@ -1,4 +1,5 @@
 define(function (require, exports, module) {
+  var utils = require('./utils');
   var MAXNESTING = 100; // 单类标记最多解析数
 
   /**
@@ -76,15 +77,31 @@ define(function (require, exports, module) {
     return result;
   };
 
+  /**
+   * Ubb
+   * @class  Ubb
+   * @constructor
+   * @return {Ubb} this
+   * @chainable
+   */
   var Ubb = function () {
     if (!(this instanceof Ubb)) {
       return new Ubb();
     }
-    this._tags = {};
+    this._tags = [];
+    // 使用一个_cacheTags保存排序后的tags，减少重复的计算消耗
+    this._cacheTags = [];
+    this._flag = {
+      // 使用一个_flag.cached标记判断是否已经缓存了最新的排序结果
+      cached: false,
+    };
     return this;
   };
   /**
    * 创建对某段文本进行递归解析单类标记的方法
+   * @method  _buildExec
+   * @private
+   * @for  Ubb
    * @param {string} tagName 标记名
    * @param  {function|string} parser 该标记的解析器，或该标记直接返回的字符串
    * @param {boolean} isPair 该标记是否成对出现
@@ -127,6 +144,9 @@ define(function (require, exports, module) {
 
   /**
    * 将危险字符编码
+   * @method _escape
+   * @private
+   * @for  Ubb
    * @param  {string} content 需要编码的内容
    * @return {string}         编码后的内容
    */
@@ -143,6 +163,9 @@ define(function (require, exports, module) {
 
   /**
    * 将内容通过单类标记转换为html格式
+   * @method  _toHtml
+   * @private
+   * @for  Ubb
    * @param  {string} content 需要转换的内容
    * @param  {string} tag 设置的标记规则
    * @return {string}         转换后的内容
@@ -157,24 +180,32 @@ define(function (require, exports, module) {
 
   /**
    * 将内容通过全部ubb标记转换为html格式
+   * @method  toHtml
+   * @for  Ubb
    * @param  {string} content 需要转换的内容
    * @return {string}         转换后的内容
    */
   Ubb.prototype.toHtml = function (content) {
-    var priority, tagName, i, len;
+    var tags, i, len;
     content = this._escape(content);
-    for (priority in this._tags) {
-      for (tagName in this._tags[priority]) {
-        for (i = 0, len = this._tags[priority][tagName].length; i < len; i++) {
-          content = this._toHtml(content, this._tags[priority][tagName][i]);
-        }
-      }
+    // 缓存排序结果
+    if (this._flag.cached) {
+      tags = this._cacheTags;
+    } else {
+      tags = utils.sortBy(this._tags, function (tag) {return -tag.priority;});
+      this._cacheTags = tags;
+      this._flag.cached = true;
+    }
+    // 依次进行转换
+    for (i = 0, len = tags.length; i < len; i++) {
+      content = this._toHtml(content, tags[i]);
     }
     return content;
   };
 
   /**
-   * 设置标签
+   * 添加标签
+   * @method add
    * @param {object} tag 标签的设置
    *                     {
    *                       tagName: '', // 标签名
@@ -185,7 +216,7 @@ define(function (require, exports, module) {
    * @return {Ubb} this
    * @chainable
    */
-  Ubb.prototype.set = function (tag) {
+  Ubb.prototype.add = function (tag) {
     var self = this;
     var defaults = {
       tagName: '',
@@ -203,15 +234,10 @@ define(function (require, exports, module) {
     if (!options.tagName) {
       throw new Error('the tag name could not be empty.');
     }
-    // 允许同名标签存在，并按优先级处理，如没有设置优先级，则按加入顺序再处理。具体实现为以下这样的数组。
-    // 此外 优先级默认为1，也就是说可能不存在数组名为0，而且应按优先级值从大到小处理，需要注意。
-    if (!self._tags[options.priority]) {
-      self._tags[options.priority] = {};
-    }
-    if (!self._tags[options.priority][options.tagName]) {
-      self._tags[options.priority][options.tagName] = [];
-    }
-    self._tags[options.priority][options.tagName].push(options);
+    // 允许同名标签存在，并按优先级处理。
+    self._tags.push(options);
+    // 添加新标签时将缓存标记设为false
+    self._flag.cached = false;
     return self;
   };
 

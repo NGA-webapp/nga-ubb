@@ -10,10 +10,16 @@ define(function (require, exports, module) {
       };
       // todo: active dom
       text = '[img]wrongurl[/img]';
-      output = '<img src="wrongurl" onerror="this.nextSibling.style.display=\'inline\';" /><span class="silver" style="display:none;"> [ wrongurl ] </span>';
+      output = '<img src="wrongurl" onerror="" />';
       test(ubb, text, output);
       text = '[img]http://img4.ngacn.cc/ngabbs/post/smile/06.gif[/img]';
-      output = '<img src="http://img4.ngacn.cc/ngabbs/post/smile/06.gif" onerror="this.nextSibling.style.display=\'inline\';" /><span class="silver" style="display:none;"> [ http://img4.ngacn.cc/ngabbs/post/smile/06.gif ] </span>';
+      output = '<img src="http://img4.ngacn.cc/ngabbs/post/smile/06.gif" onerror="" />';
+      test(ubb, text, output);
+      text = '[img]./ngabbs/post/smile/06.gif[/img]';
+      output = '<img src="http://bbs.ngacn.cc/ngabbs/post/smile/06.gif" onerror="" />';
+      test(ubb, text, output);
+      text = '[img]/ngabbs/post/smile/06.gif[/img]';
+      output = '<img src="http://bbs.ngacn.cc/ngabbs/post/smile/06.gif" onerror="" />';
       test(ubb, text, output);
     });
   };
