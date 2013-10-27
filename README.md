@@ -1,7 +1,6 @@
 # ubb for nga
 ## evn
-both jquery and seajs are required.
-
+require seajs
 
 ## todo
 
