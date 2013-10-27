@@ -1,4 +1,5 @@
 define(function (require, exports, module) {
+  var utils = require('../../../../../../libs/utils');
   return function (Ubb, testTag) {
     describe('Ubb', function () {
       describe('Ubb()', function () {
@@ -76,6 +77,72 @@ define(function (require, exports, module) {
           text = '[test]sth outside here.[/test]';
           output = 'supersth outside here.[/test]';
           test(ubb, text, output);
+        });
+        describe('cache system', function () {
+          describe('call toHtml method twice without any add action', function () {
+            it('should be sorted once', function () {
+              var spy = sinon.spy(utils, 'sortBy');
+              var ubb = new Ubb();
+              ubb.toHtml();
+              ubb.toHtml();
+              utils.sortBy.restore();
+              expect(spy.callCount).to.be.equal(1);
+            });
+          });
+          describe('call add method and not follow a toHtml method', function () {
+            it('should be not sorted when this add method called', function () {
+              var spy = sinon.spy(utils, 'sortBy');
+              var ubb = new Ubb();
+              ubb.toHtml();
+              ubb.add(testTag.single);
+              utils.sortBy.restore();
+              expect(spy.callCount).to.be.equal(1);
+            });
+          });
+          describe('call of toHtml method twice after some add actions', function () {
+            it('should be sorted once', function () {
+              var spy = sinon.spy(utils, 'sortBy');
+              var ubb = new Ubb();
+              ubb.add(testTag.pair);
+              ubb.add(testTag.single);
+              ubb.toHtml();
+              ubb.toHtml();
+              utils.sortBy.restore();
+              expect(spy.callCount).to.be.equal(1);
+            });
+          });
+          describe('call of toHtml method twice between some add actions', function () {
+            it('should be sorted twice', function () {
+              var spy = sinon.spy(utils, 'sortBy');
+              var ubb = new Ubb();
+              ubb.toHtml();
+              ubb.add(testTag.pair);
+              ubb.add(testTag.single);
+              ubb.toHtml();
+              utils.sortBy.restore();
+              expect(spy.callCount).to.be.equal(2);
+            });
+          });
+          describe('call of toHtml method more times between some add actions', function () {
+            it('should be sorted 3 times in this case', function () {
+              var spy = sinon.spy(utils, 'sortBy');
+              var ubb = new Ubb();
+              ubb.toHtml();
+              ubb.toHtml();
+              ubb.add(testTag.pair);
+              ubb.add(testTag.single);
+              ubb.toHtml();
+              ubb.toHtml();
+              ubb.add(testTag.pair);
+              ubb.add(testTag.pair);
+              ubb.add(testTag.single);
+              ubb.add(testTag.single);
+              ubb.toHtml();
+              ubb.toHtml();
+              utils.sortBy.restore();
+              expect(spy.callCount).to.be.equal(3);
+            });
+          });
         });
         describe('be safe', function () {
           var ubb, text, output;
