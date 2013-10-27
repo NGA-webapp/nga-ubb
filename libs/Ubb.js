@@ -86,7 +86,7 @@ define(function (require, exports, module) {
   /**
    * 创建对某段文本进行递归解析单类标记的方法
    * @param {string} tagName 标记名
-   * @param  {function} parser 该标记的解析器
+   * @param  {function|string} parser 该标记的解析器，或该标记直接返回的字符串
    * @param {boolean} isPair 该标记是否成对出现
    * @return {function}     对某段文本进行递归解析单类标记的方法
    */
@@ -113,9 +113,9 @@ define(function (require, exports, module) {
       attrs = getAttrs(attrStr);
       if (isPair) {
         content = result[2];
-        str = str.slice(0, startAt) + parser(content, attrs) + str.slice(endAt);
+        str = str.slice(0, startAt) + (typeof parser === 'string' ? parser : parser(content, attrs)) + str.slice(endAt);
       } else {
-        str = str.slice(0, startAt) + parser(attrs) + str.slice(endAt);
+        str = str.slice(0, startAt) + (typeof parser === 'string' ? parser : parser(attrs)) + str.slice(endAt);
       }
       if (++nest >= MAXNESTING) {
         return str;
@@ -176,7 +176,7 @@ define(function (require, exports, module) {
    * @param {object} tag 标签的设置
    *                     {
    *                       tagName: '', // 标签名
-   *                       parser: function (content, attr) {}, // 解析器
+   *                       parser: function (content, attr) {}, // 解析器，也可以直接为一个字符串
    *                       isPair: true // 是否成对出现
    *                     }
    * @return {Ubb} this

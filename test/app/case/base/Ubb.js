@@ -60,6 +60,23 @@ define(function (require, exports, module) {
           output = '<div class="test">single</div>sth outside here.[/test]';
           test(ubb, text, output);
         });
+        describe('stringParser', function () {
+          var ubb, text, output;
+          ubb = new Ubb();
+          ubb.set(testTag.stringParser);
+          text = '[test]';
+          output = 'super';
+          test(ubb, text, output);
+          text = '[test foo=bar]';
+          output = 'super';
+          test(ubb, text, output);
+          text = '[test]sth outside here.';
+          output = 'supersth outside here.';
+          test(ubb, text, output);
+          text = '[test]sth outside here.[/test]';
+          output = 'supersth outside here.[/test]';
+          test(ubb, text, output);
+        });
         describe('be safe', function () {
           var ubb, text, output;
           ubb = new Ubb();

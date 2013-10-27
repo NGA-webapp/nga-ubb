@@ -21,4 +21,9 @@ define(function (require, exports, module) {
       return '<div class="test"' + data + '>single</div>';
     }
   };
+  exports.stringParser = {
+    tagName: 'test',
+    isPair: false,
+    parser: 'super'
+  };
 });
