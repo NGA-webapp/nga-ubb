@@ -2,9 +2,11 @@
 nga的ubb设计较为杂乱，其本身的代码不便于移植，与一般的ubb规则也有所不同，所以需要重新设计一套可维护的nga-ubb解析器。以主要用于[nga-webapp](https://github.com/imyelo/nga-webapp)项目。
 
 ## Dependencies
-默认前端环境中已包含[seajs](https://github.com/seajs/seajs)。  
+### 业务环境
+除了环境中默认包含的[seajs](https://github.com/seajs/seajs)以外，不依赖任何第三方类库。  
+### 开发环境
 测试依赖于[mocha](http://visionmedia.github.com/mocha/) + [chai](http://chaijs.com/api/bdd/) (bdd) + [sinon](http://sinonjs.org/docs/)。  
-此外，尽量不依赖任何第三方类库。  
+以及自动化工具依赖于[Grunt](http://gruntjs.com/)。
 
 ## Usage
 在业务中可以直接使用`require('./index')`调用，该文件会返回一个已经设置好的ubb对象。
@@ -19,11 +21,15 @@ Example:
 
 
 ## Test
-参考[/test](test)。
+[镜像测试](http://imyelo.github.io/nga-ubb/master/test/)或者使用
+    
+    npm test
+
+具体参考可[/test](https://github.com/imyelo/nga-ubb/tree/master/test)。  
 
 ## API
 ### Ubb
-Ubb对象位于[/libs/Ubb.js](libs/Ubb.js)，使用`require('./libs/Ubb').Ubb`调用，
+Ubb对象位于[/libs/Ubb.js](https://github.com/imyelo/nga-ubb/tree/master/)，使用`require('./libs/Ubb').Ubb`调用，
 并对外部提供三个方法，分别是add，addExtra，toHtml。  
 #### 添加普通标签
 以下几种形式的标签为标准的ubb标签，可以用add方法进行添加。

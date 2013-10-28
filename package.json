@@ -8,7 +8,7 @@
     "grunt-jscoverage": "0.0.3"
   },
   "scripts": {
-    "test": "grunt test --verbose --force",
+    "test": "grunt test",
     "coveralls": "jscoverage lib && YOURPACKAGE_COVERAGE=1 nodeunit --reporter=lcov test | coveralls"
   },
   "dependencies": {
