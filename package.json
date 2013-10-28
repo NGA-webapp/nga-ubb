@@ -7,6 +7,6 @@
     "grunt-mocha": "~0.4.1"
   },
   "scripts": {
-    "test": "./node_modules/grunt/bin/grunt test"
+    "test": "grunt test --verbose --force"
   }
 }
