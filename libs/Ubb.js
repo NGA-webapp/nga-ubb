@@ -47,8 +47,8 @@ define(function (require, exports, module) {
    * @param  {string} attrStr 字符串形式的标记属性，如'=value', ' foo=bar', ' foo bar'
    * @return {object}         便于使用的标记属性
    *                          {
-   *                            nop: false, // 当该值为真时表示无任何属性值
-   *                            value: '',  // 当该值不为undefined时表示有[tag=value]形式的唯一值
+   *                            nop: false, // 没有任何属性值
+   *                            value: '',  // 当标签格式为[tag=value]时代表其value，否则该值为undefined
    *                            arr: [], // [tag foo bar]或[tag foo bar=baz]形式中按顺序存入该数组，如返回[foo, bar], [foo, bar=baz]
    *                            dict: {} // [tag ...]形式中属性含有键名时存入该对象，如[tag foo bar=baz]返回{bar: baz}
    *                          }
