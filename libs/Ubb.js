@@ -109,34 +109,43 @@ define(function (require, exports, module) {
    */
   Ubb.prototype._buildExec = function (tagName, parser, isPair) {
     var reg;
+    // 根据标签的设置（是否成对出现）选择不同的匹配方法
     reg = isPair ? pairReg(tagName) : singleReg(tagName);
 
     /**
      * 对某段文本进行递归解析单类标记
      * @param  {string} str 需要解析的内容
-     * @param {number} nest 当前解析次数，当大于设置的最大值时跳出递归，避免发生死循环
+     * @param {number} nest 当前解析次数，当大于设置的最大值时强制跳出递归，以避免发生死循环
      * @return {string}     解析后的内容
      */
     var _exec = function (str, nest) {
       var result, startAt, endAt, attrStr, attrs, content;
+      // 重置匹配结果
       reg.lastIndex = 0;
+      // 进行匹配
       result = reg.exec(str);
+      // 如果没有查找到匹配的标签则返回原文本，结束解析
       if (!result) {
         return str;
       }
+      // 如果匹配成功，则取出匹配的位置
       startAt = reg.lastIndex - result[0].length;
       endAt = reg.lastIndex;
+      // 提取属性
       attrStr = result[1];
       attrs = getAttrs(attrStr);
+      // 根据标签的设置（是否成对出现）选择进行不同的字符串替换方法
       if (isPair) {
         content = result[2];
         str = str.slice(0, startAt) + (typeof parser === 'string' ? parser : parser(content, attrs)) + str.slice(endAt);
       } else {
         str = str.slice(0, startAt) + (typeof parser === 'string' ? parser : parser(attrs)) + str.slice(endAt);
       }
+      // 如果此次解析已经超过设置的最大次数限制则结束解析
       if (++nest >= MAXNESTING) {
         return str;
       }
+      // 否则将以递归的形式继续对本类标签进行查找解析
       return _exec(str, nest);
     };
     return _exec;
