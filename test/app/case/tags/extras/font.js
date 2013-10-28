@@ -11,6 +11,7 @@ define(function (require, exports, module) {
       describe('hExtra', function () {
         text = '======';
         output = '<h4></h4>';
+        test(ubb, text, output);
         text = '===========';
         output = '<h4></h4>';
         test(ubb, text, output);

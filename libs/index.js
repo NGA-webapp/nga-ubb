@@ -5,6 +5,7 @@ define(function (require, exports) {
   var list = require('./tags/list');
   var img = require('./tags/img');
   var fontExtra = require('./tags/extras/font');
+  var brExtra = require('./tags/extras/br');
   var ubb = new Ubb();
   ubb.add(font.b);
   ubb.add(font.u);
@@ -23,5 +24,6 @@ define(function (require, exports) {
   ubb.add(img.img);
   ubb.add(img.relativeImg);
   ubb.addExtra(fontExtra.h);
+  ubb.addExtra(brExtra.br);
   return ubb;
 });
