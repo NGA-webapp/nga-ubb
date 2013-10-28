@@ -25,11 +25,15 @@ Ubb对象位于[/libs/Ubb.js](libs/Ubb.js)，使用`require('./libs/Ubb').Ubb`�
 以下几种形式的标签为标准的ubb标签，可以用add方法进行添加。
 
 - [**tagName** *attr*=val *attr2*=val2]content[**/tagName**]
-- [**tagName** *attr*=val*]content[**/tagName**]
+- [**tagName** *attr*=val]content[**/tagName**]
+- [**tagName** val val2]content[**/tagName**]
+- [**tagName** val]content[**/tagName**]
 - [**tagName**=val]content[**/tagName**]
 - [**tagName**]content[**/tagName**]
 - [**tagName** *attr*=val *attr2*=val2]
 - [**tagName** *attr*=val]
+- [**tagName** val val2]
+- [**tagName** val]
 - [**tagName**=val]
 - [**tagName**]
 
@@ -37,8 +41,17 @@ add方法接受一个tag配置对象，包含以下参数
 
     tagName: 标签名  
     isPair: 标签是否成对出现  
-    parser: 解析该标签的方法，成对标签将传入参数`(content, attrs)`，而非成对标签则传入参数`(attrs)`  
+    parser: 解析该标签的方法，成对标签将传入参数(content, attrs)，而非成对标签则传入参数(attrs)  
     priority: 标签处理优先级，值越大越先处理，可以不填，默认为`1`  
+
+其中parser传入的attrs参数为以下形式
+
+    {
+      nop: false, // 没有任何属性值
+      value: '',  // 当标签格式为[tag=value]时代表其value，否则该值为undefined
+      arr: [], // [tag foo bar]或[tag foo bar=baz]形式中按顺序存入该数组，如返回[foo, bar], [foo, bar=baz]
+      dict: {} // [tag ...]形式中属性含有键名时存入该对象，如[tag foo bar=baz]的标签返回{bar: baz}
+    }
 
 Example:
 
@@ -62,7 +75,7 @@ Example:
 
 - `===head===`
 - `[s:4]`
-- `[@yelo]
+- `[@yelo]`
 - `<br />`
 
 是的，`<br/>`也需要使用该方法进行解析。由于在内部执行解析之前，会对内容进行一次编码，过滤危险的字符串，如`<br />`会被转换为`&gt;br /&lt;`，因此需要对原内容中的`<br />`另行处理。
@@ -71,9 +84,9 @@ addExtra方法也接受一个tag配置对象，但与add方法，其包含以下
 
     regExp: 匹配解析的正则表达式  
     replacement: 替换内容  
-    priority: 标签处理优先级，此处与add方法的priority相同，值越大越先处理，可以不填，默认为`1`  
+    priority: 标签处理优先级，此处与add方法的priority相同，值越大越先处理，可以不填，默认为1  
 
-addExtra传入的regExp和replacement可以按String.prototype.replace的参数理解。但与String.prototype.replace不同的是addExtra会对内容进行递归处理，从而解决嵌套形式出现的标签。
+addExtra传入的regExp和replacement可以按String.prototype.replace的参数理解。但与String.prototype.replace不同的是addExtra会对内容进行递归处理，从而解析嵌套形式出现的标签。
 
 Example:
 
