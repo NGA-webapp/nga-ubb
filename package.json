@@ -1,0 +1,12 @@
+{
+  "name": "nga-ubb",
+  "version": "0.1.0",
+  "author": "yelo",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-mocha": "~0.4.1"
+  },
+  "scripts": {
+    "test": "./node_modules/grunt/bin/grunt test"
+  }
+}
