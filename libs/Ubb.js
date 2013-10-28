@@ -15,6 +15,14 @@ define(function (require, exports, module) {
   };
 
   /**
+   * 获取空正则表达式
+   * @return {RegExp}         空正则表达式
+   */
+  var emptyReg = exports.emptyReg = function () {
+    return new RegExp(/^(?:)$/);
+  };
+
+  /**
    * 获取匹配成对出现的ubb标签无内嵌套的正则表达式
    * @param  {string} tagName 标签名
    * @return {RegExp}         匹配的正则表达式
@@ -97,15 +105,16 @@ define(function (require, exports, module) {
     };
     return this;
   };
+
   /**
-   * 创建对某段文本进行递归解析单类标记的方法
+   * 创建对某段文本进行递归解析单类**普通**标记的方法
    * @method  _buildExec
    * @private
    * @for  Ubb
    * @param {string} tagName 标记名
    * @param  {function|string} parser 该标记的解析器，或该标记直接返回的字符串
    * @param {boolean} isPair 该标记是否成对出现
-   * @return {function}     对某段文本进行递归解析单类标记的方法
+   * @return {function}     对某段文本进行递归解析单类**普通**标记的方法
    */
   Ubb.prototype._buildExec = function (tagName, parser, isPair) {
     var reg;
@@ -113,7 +122,7 @@ define(function (require, exports, module) {
     reg = isPair ? pairReg(tagName) : singleReg(tagName);
 
     /**
-     * 对某段文本进行递归解析单类标记
+     * 对某段文本进行递归解析单类**普通**标记
      * @param  {string} str 需要解析的内容
      * @param {number} nest 当前解析次数，当大于设置的最大值时强制跳出递归，以避免发生死循环
      * @return {string}     解析后的内容
@@ -152,6 +161,36 @@ define(function (require, exports, module) {
   };
 
   /**
+   * 创建对某段文本进行递归解析单类**特殊**标记的方法
+   * @method  _buildExtraExec
+   * @private
+   * @for  Ubb
+   * @param {RegExp} regExp 匹配解析的正则表达式
+   * @param {string} replacement 替换内容
+   * @return {function}     对某段文本进行递归解析单类**特殊**标记的方法
+   */
+  Ubb.prototype._buildExtraExec = function (regExp, replacement) {
+    /**
+     * 对某段文本进行递归解析单类**特殊**标记
+     * @param  {string} str 需要解析的内容
+     * @param {number} nest 当前解析次数，当大于设置的最大值时强制跳出递归，以避免发生死循环
+     * @return {string}     解析后的内容
+     */
+    var _exec = function (str, nest) {
+      regExp.lastIndex = 0;
+      if (!regExp.test(str)) {
+        return str;
+      }
+      str = str.replace(regExp, replacement);
+      if (++nest >= MAXNESTING) {
+        return str;
+      }
+      return _exec(str, nest);
+    };
+    return _exec;
+  };
+
+  /**
    * 将危险字符编码
    * @method _escape
    * @private
@@ -180,11 +219,18 @@ define(function (require, exports, module) {
    * @return {string}         转换后的内容
    */
   Ubb.prototype._toHtml = function (content, tag) {
-    var tagName, parser, isPair;
-    tagName = tag.tagName;
-    parser = tag.parser;
-    isPair = tag.isPair;
-    return this._buildExec(tagName, parser, isPair)(content, 0);
+    var isExtra, regExp, replacement, tagName, parser, isPair;
+    isExtra = tag.isExtra;
+    if (isExtra) {
+      regExp = tag.regExp;
+      replacement = tag.replacement;
+      return this._buildExtraExec(regExp, replacement)(content, 0);
+    } else {
+      tagName = tag.tagName;
+      parser = tag.parser;
+      isPair = tag.isPair;
+      return this._buildExec(tagName, parser, isPair)(content, 0);
+    }
   };
 
   /**
@@ -239,6 +285,7 @@ define(function (require, exports, module) {
       parser: typeof tag.parser === 'undefined' ? defaults.parser : tag.parser,
       isPair: typeof tag.isPair === 'undefined' ? defaults.isPair : tag.isPair,
       priority: typeof tag.priority === 'undefined' ? defaults.priority : tag.priority,
+      isExtra: false,
     };
     if (!options.tagName) {
       throw new Error('the tag name could not be empty.');
@@ -252,8 +299,36 @@ define(function (require, exports, module) {
 
 
   // TODO 如 ===h=== 为标题
-  Ubb.prototype.extra = function () {
-
+  /**
+   * 添加**特殊**标签
+   * @method addExtra
+   * @param {object} tag 标签的设置
+   *                     {
+   *                       regExp: new RegExp(/===(.*?)===/gi), // 匹配解析的正则表达式
+   *                       replacement: '<h4>$1</h4>', // 替换内容
+   *                     }
+   * @return {Ubb} this
+   * @chainable
+   */
+  Ubb.prototype.addExtra = function (tag) {
+    var self = this;
+    var defaults = {
+      regExp: emptyReg(),
+      replacement: '',
+      priority: 1
+    };
+    // var options = $.extend({}, defaults, tag);
+    var options = {
+      regExp: typeof tag.regExp === 'undefined' ? defaults.regExp : tag.regExp,
+      replacement: typeof tag.replacement === 'undefined' ? defaults.replacement : tag.replacement,
+      priority: typeof tag.priority === 'undefined' ? defaults.priority : tag.priority,
+      isExtra: true,
+    };
+    // 特殊标签与普通标签共同放在一个集合中
+    self._tags.push(options);
+    // 添加新标签时将缓存标记设为false
+    self._flag.cached = false;
+    return self;
   };
 
   exports.Ubb = Ubb;
