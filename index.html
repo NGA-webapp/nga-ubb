@@ -1,0 +1,321 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Nga-ubb by imyelo</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Nga-ubb</h1>
+        <p>a rebuild version of ubb for nga-webapp</p>
+
+        <p class="view"><a href="https://github.com/imyelo/nga-ubb">View the Project on GitHub <small>imyelo/nga-ubb</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/imyelo/nga-ubb/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/imyelo/nga-ubb/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/imyelo/nga-ubb">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="ubb-for-nga-webapp-" class="anchor" href="#ubb-for-nga-webapp-"><span class="octicon octicon-link"></span></a>ubb for nga-webapp <a href="https://travis-ci.org/imyelo/nga-ubb"><img src="https://travis-ci.org/imyelo/nga-ubb.png?branch=master" alt="Build Status"></a>
+</h1>
+
+<p>nga的ubb设计较为杂乱，其本身的代码不便于移植，与一般的ubb规则也有所不同，所以需要重新设计一套可维护的nga-ubb解析器。以主要用于<a href="https://github.com/imyelo/nga-webapp">nga-webapp</a>项目。</p>
+
+<h2>
+<a name="dependencies" class="anchor" href="#dependencies"><span class="octicon octicon-link"></span></a>Dependencies</h2>
+
+<p>默认前端环境中已包含<a href="https://github.com/seajs/seajs">seajs</a>。<br>
+测试依赖于<a href="http://visionmedia.github.com/mocha/">mocha</a> + <a href="http://chaijs.com/api/bdd/">chai</a> (bdd) + <a href="http://sinonjs.org/docs/">sinon</a>。<br>
+此外，尽量不依赖任何第三方类库。  </p>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>在业务中可以直接使用<code>require('./index')</code>调用，该文件会返回一个已经设置好的ubb对象。</p>
+
+<p>Example:</p>
+
+<pre><code>var ubb = require('utils/ubb/index');
+var content = '[h]foobar[/h]......';
+...
+content = ubb.toHtml(content);
+...
+</code></pre>
+
+<h2>
+<a name="test" class="anchor" href="#test"><span class="octicon octicon-link"></span></a>Test</h2>
+
+<p>参考<a href="test">/test</a>。</p>
+
+<h2>
+<a name="api" class="anchor" href="#api"><span class="octicon octicon-link"></span></a>API</h2>
+
+<h3>
+<a name="ubb" class="anchor" href="#ubb"><span class="octicon octicon-link"></span></a>Ubb</h3>
+
+<p>Ubb对象位于<a href="libs/Ubb.js">/libs/Ubb.js</a>，使用<code>require('./libs/Ubb').Ubb</code>调用，
+并对外部提供三个方法，分别是add，addExtra，toHtml。  </p>
+
+<h4>
+<a name="%E6%B7%BB%E5%8A%A0%E6%99%AE%E9%80%9A%E6%A0%87%E7%AD%BE" class="anchor" href="#%E6%B7%BB%E5%8A%A0%E6%99%AE%E9%80%9A%E6%A0%87%E7%AD%BE"><span class="octicon octicon-link"></span></a>添加普通标签</h4>
+
+<p>以下几种形式的标签为标准的ubb标签，可以用add方法进行添加。</p>
+
+<ul>
+<li>[<strong>tagName</strong> <em>attr</em>=val <em>attr2</em>=val2]content[<strong>/tagName</strong>]</li>
+<li>[<strong>tagName</strong> <em>attr</em>=val]content[<strong>/tagName</strong>]</li>
+<li>[<strong>tagName</strong> val val2]content[<strong>/tagName</strong>]</li>
+<li>[<strong>tagName</strong> val]content[<strong>/tagName</strong>]</li>
+<li>[<strong>tagName</strong>=val]content[<strong>/tagName</strong>]</li>
+<li>[<strong>tagName</strong>]content[<strong>/tagName</strong>]</li>
+<li>[<strong>tagName</strong> <em>attr</em>=val <em>attr2</em>=val2]</li>
+<li>[<strong>tagName</strong> <em>attr</em>=val]</li>
+<li>[<strong>tagName</strong> val val2]</li>
+<li>[<strong>tagName</strong> val]</li>
+<li>[<strong>tagName</strong>=val]</li>
+<li>[<strong>tagName</strong>]</li>
+</ul><p>add方法接受一个tag配置对象，包含以下参数</p>
+
+<pre><code>tagName: 标签名  
+isPair: 标签是否成对出现  
+parser: 解析该标签的方法，成对标签将传入参数(content, attrs)，而非成对标签则传入参数(attrs)  
+priority: 标签处理优先级，值越大越先处理，可以不填，默认为`1`  
+</code></pre>
+
+<p>其中parser传入的attrs参数为以下形式</p>
+
+<pre><code>{
+  nop: false, // 没有任何属性值
+  value: '',  // 当标签格式为[tagName=val]时代表val，否则该值为undefined
+  arr: [], // 当标签有属性值且格式不为[tagName=val]时，属性将按顺序存入该数组
+  dict: {} // 当标签有属性值且格式不为[tagName=val]时，有属性名的属性将以键值的形式存入该对象
+}
+</code></pre>
+
+<p>Example:</p>
+
+<pre><code>var ubb = new Ubb();
+ubb.add({
+  tagName: 'test',
+  isPair: true,
+  parser: function (content, attrs) {
+    var data = '';
+    if (!attrs.nop &amp;&amp; ('foo' in attrs.dict)) {
+      data = ' data-foo="' + attrs.dict.foo + '"';
+    }
+    return '&lt;div class="test"' + data + '&gt;' + content + '&lt;/div&gt;';
+  },
+  priority: 2,
+});
+</code></pre>
+
+<h4>
+<a name="%E6%B7%BB%E5%8A%A0%E7%89%B9%E6%AE%8A%E6%A0%87%E7%AD%BE" class="anchor" href="#%E6%B7%BB%E5%8A%A0%E7%89%B9%E6%AE%8A%E6%A0%87%E7%AD%BE"><span class="octicon octicon-link"></span></a>添加特殊标签</h4>
+
+<p>非标准格式的标签，可以用addExtra方法进行添加。如以下例子：</p>
+
+<ul>
+<li><code>===head===</code></li>
+<li><code>[s:4]</code></li>
+<li><code>[@yelo]</code></li>
+<li><code>&lt;br /&gt;</code></li>
+</ul><p>是的，<code>&lt;br/&gt;</code>也需要使用该方法进行解析。由于在内部执行解析之前，会对内容进行一次编码，过滤危险的字符串，如<code>&lt;br /&gt;</code>会被转换为<code>&amp;gt;br /&amp;lt;</code>，因此需要对原内容中的<code>&lt;br /&gt;</code>另行处理。</p>
+
+<p>addExtra方法也接受一个tag配置对象，但与add方法，其包含以下参数</p>
+
+<pre><code>regExp: 匹配解析的正则表达式  
+replacement: 替换内容  
+priority: 标签处理优先级，此处与add方法的priority相同，值越大越先处理，可以不填，默认为1  
+</code></pre>
+
+<p>addExtra传入的regExp和replacement可以按String.prototype.replace的参数理解。但与String.prototype.replace不同的是addExtra会对内容进行递归处理，从而解析嵌套形式出现的标签。</p>
+
+<p>Example:</p>
+
+<pre><code>var ubb = new Ubb();
+ubb.add({
+  regExp: new RegExp(/-=test:(.*?)=-/gi),
+  replacement: '&lt;div class="test"&gt;$1&lt;/div&gt;',
+  priority: 2,
+});
+</code></pre>
+
+<h4>
+<a name="%E8%BE%93%E5%87%BA%E8%A7%A3%E6%9E%90%E5%90%8E%E7%9A%84%E6%96%87%E6%9C%AC" class="anchor" href="#%E8%BE%93%E5%87%BA%E8%A7%A3%E6%9E%90%E5%90%8E%E7%9A%84%E6%96%87%E6%9C%AC"><span class="octicon octicon-link"></span></a>输出解析后的文本</h4>
+
+<p>在添加一系列的标签以后，可以通过toHtml方法输出解析后的文本。  </p>
+
+<p>Example:</p>
+
+<pre><code>var ubb = new Ubb();
+var result;
+... some add or addExtra function
+result = ubb.toHtml('[test]sth here.[/test]');
+</code></pre>
+
+<p>toHtml会按设置的优先级进行排序，并将排序后的标签进行缓存，然后依次进行解析。在下一次调用toHtml时，则直接从缓存中取出按优先级排序的标签，减少排序造成的消耗。<br><em>若在toHtml执行之后再次执行add或者addExtra操作，则会在下一次解析的时候重新排序。</em></p>
+
+<h2>
+<a name="%E6%A0%87%E7%AD%BE%E8%A1%A5%E5%85%A8%E8%AE%A1%E5%88%92" class="anchor" href="#%E6%A0%87%E7%AD%BE%E8%A1%A5%E5%85%A8%E8%AE%A1%E5%88%92"><span class="octicon octicon-link"></span></a>标签补全计划</h2>
+
+<p>nga标签类型繁多，但实际使用覆盖率低，因此优先处理常用部分。</p>
+
+<ul>
+<li>所有标签
+
+<ul>
+<li>[b] <del>粗体文字</del>
+
+<ul>
+<li><del>基本解析</del></li>
+</ul>
+</li>
+<li>[u] <del>下划线文字</del>
+
+<ul>
+<li><del>基本解析</del></li>
+</ul>
+</li>
+<li>[i] <del>斜体文字</del>
+
+<ul>
+<li><del>基本解析</del></li>
+</ul>
+</li>
+<li>[align] <del>左/中/右对齐</del>
+
+<ul>
+<li><del>基本解析</del></li>
+</ul>
+</li>
+<li>[color] 文字颜色
+
+<ul>
+<li><del>基本解析</del></li>
+<li>重写样式表</li>
+</ul>
+</li>
+<li>[size] 文字大小
+
+<ul>
+<li><del>基本解析</del></li>
+<li>重写样式表</li>
+<li>限制最大值</li>
+</ul>
+</li>
+<li>[font] 文字字体
+
+<ul>
+<li><del>基本解析</del></li>
+<li>重写样式表</li>
+</ul>
+</li>
+<li>[del] 删除线
+
+<ul>
+<li><del>基本解析</del></li>
+<li>重写样式表</li>
+</ul>
+</li>
+<li>[h] 段落标题
+
+<ul>
+<li><del>基本解析</del></li>
+</ul>
+</li>
+<li>===h=== 段落标题
+
+<ul>
+<li><del>基本解析</del></li>
+</ul>
+</li>
+<li>[l/r] 左/右浮动
+
+<ul>
+<li><del>基本解析</del></li>
+</ul>
+</li>
+<li>[list] 列表条目
+
+<ul>
+<li><del>基本解析</del></li>
+<li>重写样式表</li>
+</ul>
+</li>
+<li>[img] 插入图片
+
+<ul>
+<li><del>基本解析</del></li>
+<li>重写样式表</li>
+<li>处理异常</li>
+</ul>
+</li>
+<li>[s:] 插入官方表情
+
+<ul>
+<li><del>基本解析</del></li>
+<li>重写文件地址，使用缓存处理</li>
+</ul>
+</li>
+<li>[img] 插入额外表情图片
+
+<ul>
+<li>基本解析</li>
+<li>重写文件地址，使用缓存处理</li>
+</ul>
+</li>
+<li>[quote] 引用文字
+
+<ul>
+<li><del>基本解析</del></li>
+<li>重写样式表</li>
+</ul>
+</li>
+<li>[code] 程序代码
+
+<ul>
+<li><del>基本解析</del></li>
+<li>重写样式表</li>
+</ul>
+</li>
+<li>[url] 插入链接</li>
+<li>[tid/pid] 主题/回复</li>
+<li>[crypt] 插入加密的内容</li>
+<li>[dice] 投骰子</li>
+<li>[collapse] 插入折叠的内容</li>
+<li>[@用户名] 发送提醒</li>
+<li>[flash] 插入flash(视频)</li>
+<li>[table] 插入表格</li>
+<li>[randomblock] 插入随机段落</li>
+<li>[t.178.com] 引用178尾巴</li>
+<li>[album] 插入相册</li>
+<li>[customachieve] 自定义成就</li>
+<li>[[]] 游戏数据库</li>
+<li>[armory] 魔兽世界人物信息</li>
+<li>[url] Diablo3人物信息</li>
+</ul>
+</li>
+</ul>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/imyelo">imyelo</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
