@@ -1,4 +1,4 @@
-# ubb for nga-webapp
+# ubb for nga-webapp [![Build Status](https://travis-ci.org/imyelo/nga-ubb.png?branch=master)](https://travis-ci.org/imyelo/nga-ubb)  
 nga的ubb设计较为杂乱，其本身的代码不便于移植，与一般的ubb规则也有所不同，所以需要重新设计一套可维护的nga-ubb解析器。以主要用于[nga-webapp](https://github.com/imyelo/nga-webapp)项目。
 
 ## Dependencies
