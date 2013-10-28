@@ -1,3 +1,3 @@
 [submodule "minor"]
-	path = minor
+	path = master
 	url = https://github.com/imyelo/nga-ubb
