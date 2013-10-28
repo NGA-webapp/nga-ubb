@@ -1,6 +1,6 @@
 define(function (require, exports, module) {
   return function (ubb) {
-    describe.only('smileExtra', function () {
+    describe('smileExtra', function () {
       var test = function (ubb, text, output) {
         describe(text, function () {
           it('should be ' + output, function () {
