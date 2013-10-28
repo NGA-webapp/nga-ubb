@@ -24,14 +24,14 @@ Ubb对象位于[/libs/Ubb.js](libs/Ubb.js)，使用`require('./libs/Ubb').Ubb`�
 #### 添加普通标签
 以下几种形式的标签为标准的ubb标签，可以用add方法进行添加。
 
-- **[tagName** *attr*=val *attr2*=val2**]**content**[/tagName]**
-- **[tagName** *attr*=val**]**content**[/tagName]**
-- **[tagName**=val**]**content**[/tagName]**
-- **[tagName]**content**[/tagName]**
-- **[tagName** *attr*=val *attr2*=val2**]**
-- **[tagName** *attr*=val**]**
-- **[tagName**=val**]**
-- **[tagName]**
+- [**tagName** *attr*=val *attr2*=val2]content[**/tagName**]
+- [**tagName** *attr*=val*]content[**/tagName**]
+- [**tagName**=val]content[**/tagName**]
+- [**tagName**]content[**/tagName**]
+- [**tagName** *attr*=val *attr2*=val2]
+- [**tagName** *attr*=val]
+- [**tagName**=val]
+- [**tagName**]
 
 add方法接受一个tag配置对象，包含以下参数
 
