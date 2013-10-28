@@ -1,6 +1,6 @@
 define(function (require, exports, module) {
   var utils = require('../../../../../../libs/utils');
-  return function (Ubb, testTag) {
+  return function (Ubb, testTag, testExtraTag) {
     describe('Ubb', function () {
       describe('Ubb()', function () {
         it('should instanceof Ubb', function () {
@@ -123,6 +123,18 @@ define(function (require, exports, module) {
               expect(spy.callCount).to.be.equal(2);
             });
           });
+          describe('call of toHtml method twice between some addExtra actions', function () {
+            it('should be sorted twice', function () {
+              var spy = sinon.spy(utils, 'sortBy');
+              var ubb = new Ubb();
+              ubb.toHtml();
+              ubb.addExtra(testExtraTag.testExtra);
+              ubb.addExtra(testExtraTag.testExtraException);
+              ubb.toHtml();
+              utils.sortBy.restore();
+              expect(spy.callCount).to.be.equal(2);
+            });
+          });
           describe('call of toHtml method more times between some add actions', function () {
             it('should be sorted 3 times in this case', function () {
               var spy = sinon.spy(utils, 'sortBy');
@@ -151,6 +163,32 @@ define(function (require, exports, module) {
           text = '[test foo=120%;"> data-height="]sth[/test]';
           output = '<div class="test" data-foo="120%;&quot;&gt;">sth</div>';
           test(ubb, text, output);
+        });
+        describe('extraTag', function () {
+          var ubb, text, output;
+          ubb = new Ubb();
+          ubb.addExtra(testExtraTag.testExtra);
+          text = '-=test:=-';
+          output = '<div class="test"></div>';
+          test(ubb, text, output);
+          text = '-=test:foobar=-';
+          output = '<div class="test">foobar</div>';
+          test(ubb, text, output);
+          text = '-=test:foobar=--=test:foobar=--=test:foobar=-';
+          output = '<div class="test">foobar</div><div class="test">foobar</div><div class="test">foobar</div>';
+          test(ubb, text, output);
+          text = '-=test:-=test:foobar=-=-';
+          output = '<div class="test"><div class="test">foobar</div></div>';
+          test(ubb, text, output);
+          text = '-=test:-=test:foobar=--=test:foobar=-baz=-';
+          output = '<div class="test"><div class="test">foobar</div><div class="test">foobar</div>baz</div>';
+          test(ubb, text, output);
+          describe('exception', function () {
+            ubb.addExtra(testExtraTag.testExtraException);
+            text = '-=exception=-';
+            output = '<div class="test">$1</div>';
+            test(ubb, text, output);
+          });
         });
       });
     });
