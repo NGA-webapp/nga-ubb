@@ -52,9 +52,9 @@ add方法接受一个tag配置对象，包含以下参数
 
     {
       nop: false, // 没有任何属性值
-      value: '',  // 当标签格式为[tag=value]时代表其value，否则该值为undefined
-      arr: [], // [tag foo bar]或[tag foo bar=baz]形式中按顺序存入该数组，如返回[foo, bar], [foo, bar=baz]
-      dict: {} // [tag ...]形式中属性含有键名时存入该对象，如[tag foo bar=baz]的标签返回{bar: baz}
+      value: '',  // 当标签格式为[tagName=val]时代表val，否则该值为undefined
+      arr: [], // 当标签有属性值且格式不为[tagName=val]时，属性将按顺序存入该数组
+      dict: {} // 当标签有属性值且格式不为[tagName=val]时，有属性名的属性将以键值的形式存入该对象
     }
 
 Example:
