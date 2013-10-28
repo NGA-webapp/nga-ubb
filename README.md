@@ -1,12 +1,104 @@
 # ubb for nga-webapp
 nga的ubb设计较为杂乱，其本身的代码不便于移植，与一般的ubb规则也有所不同，所以需要重新设计一套可维护的nga-ubb解析器。以主要用于[nga-webapp](https://github.com/imyelo/nga-webapp)项目。
+
 ## 依赖
 默认前端环境中已包含[seajs](https://github.com/seajs/seajs)。  
 测试依赖于[mocha](http://visionmedia.github.com/mocha/) + [chai](http://chaijs.com/api/bdd/) (bdd) + [sinon](http://sinonjs.org/docs/)。  
 此外，尽量不依赖任何第三方类库。  
 
-## todo
-标签类型繁多，但实际使用覆盖率低，因此优先处理常用部分。
+## Usage
+在业务中可以直接使用`require('./index')`调用，该文件会返回一个已经设置好的ubb对象。
+
+Example:
+
+    var ubb = require('utils/ubb/index');
+    var content = '[h]foobar[/h]......';
+    ...
+    content = ubb.toHtml(content);
+    ...
+
+## API
+### Ubb
+Ubb对象位于[/libs/Ubb.js](libs/Ubb.js)，使用`require('./libs/Ubb').Ubb`调用，
+并对外部提供三个方法，分别是add，addExtra，toHtml。  
+#### 添加普通标签
+以下几种形式的标签为标准的ubb标签，可以用add方法进行添加。
+
+- **[tagName** *attr*=val *attr2*=val2**]**content**[/tagName]**
+- **[tagName** *attr*=val**]**content**[/tagName]**
+- **[tagName**=val**]**content**[/tagName]**
+- **[tagName]**content**[/tagName]**
+- **[tagName** *attr*=val *attr2*=val2**]**
+- **[tagName** *attr*=val**]**
+- **[tagName**=val**]**
+- **[tagName]**
+
+add方法接受一个tag配置对象，包含以下参数
+
+    tagName: 标签名  
+    isPair: 标签是否成对出现  
+    parser: 解析该标签的方法，成对标签将传入参数`(content, attrs)`，而非成对标签则传入参数`(attrs)`  
+    priority: 标签处理优先级，值越大越先处理，可以不填，默认为`1`  
+
+Example:
+
+    var ubb = new Ubb();
+    ubb.add({
+      tagName: 'test',
+      isPair: true,
+      parser: function (content, attrs) {
+        var data = '';
+        if (!attrs.nop && ('foo' in attrs.dict)) {
+          data = ' data-foo="' + attrs.dict.foo + '"';
+        }
+        return '<div class="test"' + data + '>' + content + '</div>';
+      },
+      priority: 2,
+    });
+
+
+#### 添加特殊标签
+非标准格式的标签，可以用addExtra方法进行添加。如以下例子：
+
+- `===head===`
+- `[s:4]`
+- `[@yelo]
+- `<br />`
+
+是的，`<br/>`也需要使用该方法进行解析。由于在内部执行解析之前，会对内容进行一次编码，过滤危险的字符串，如`<br />`会被转换为`&gt;br /&lt;`，因此需要对原内容中的`<br />`另行处理。
+
+addExtra方法也接受一个tag配置对象，但与add方法，其包含以下参数
+
+    regExp: 匹配解析的正则表达式  
+    replacement: 替换内容  
+    priority: 标签处理优先级，此处与add方法的priority相同，值越大越先处理，可以不填，默认为`1`  
+
+addExtra传入的regExp和replacement可以按String.prototype.replace的参数理解。但与String.prototype.replace不同的是addExtra会对内容进行递归处理，从而解决嵌套形式出现的标签。
+
+Example:
+
+    var ubb = new Ubb();
+    ubb.add({
+      regExp: new RegExp(/-=test:(.*?)=-/gi),
+      replacement: '<div class="test">$1</div>',
+      priority: 2,
+    });
+
+#### 输出解析后的文本
+在添加一系列的标签以后，可以通过toHtml方法输出解析后的文本。  
+
+Example:
+
+    var ubb = new Ubb();
+    var result;
+    ... some add or addExtra function
+    result = ubb.toHtml('[test]sth here.[/test]');
+
+toHtml会按设置的优先级进行排序，并将排序后的标签进行缓存，然后依次进行解析。在下一次调用toHtml时，则直接从缓存中取出按优先级排序的标签，减少排序造成的消耗。  
+*若在toHtml执行之后再次执行add或者addExtra操作，则会在下一次解析的时候重新排序。*
+
+## 标签补全计划
+nga标签类型繁多，但实际使用覆盖率低，因此优先处理常用部分。
 
 + 所有标签
     - [b] <del>粗体文字</del>
@@ -70,3 +162,7 @@ nga的ubb设计较为杂乱，其本身的代码不便于移植，与一般的ub
     - [[]] 游戏数据库
     - [armory] 魔兽世界人物信息
     - [url] Diablo3人物信息
+
+
+## 测试
+参考[/test](test)。

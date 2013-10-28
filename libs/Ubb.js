@@ -297,8 +297,6 @@ define(function (require, exports, module) {
     return self;
   };
 
-
-  // TODO 如 ===h=== 为标题
   /**
    * 添加**特殊**标签
    * @method addExtra
