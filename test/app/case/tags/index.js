@@ -5,6 +5,7 @@ define(function (require, exports, module) {
       require('./layout')(ubb);
       require('./list')(ubb);
       require('./img')(ubb);
+      require('./url')(ubb);
       require('./extras/index')(ubb);
     });
   };

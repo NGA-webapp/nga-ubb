@@ -26,6 +26,16 @@ module.exports = function (grunt) {
           {extend: true, src: ['index.js', 'libs/**'], dest: config.path.webapp}
         ]
       }
+    },
+    watch: {
+      libs: {
+        files: 'libs/**/**',
+        tasks: ['test']
+      },
+      tests: {
+        files: 'test/**/**',
+        tasks: ['test']
+      }
     }
   });
 
@@ -33,8 +43,10 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-jscoverage");
   grunt.loadNpmTasks("grunt-contrib-clean");
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.registerTask('webapp', ['clean', 'copy']);
   grunt.registerTask('test', ['mocha']);
+  grunt.registerTask('dev', ['watch']);
   grunt.registerTask('cov', ['jscoverage']);
 };
