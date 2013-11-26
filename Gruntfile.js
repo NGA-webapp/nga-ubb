@@ -14,7 +14,7 @@ module.exports = function (grunt) {
     },
     clean: {
       webapp: {
-        src: [config.path.webapp],
+        src: [config.path.webapp + '**/**'],
         options: {
           force: true
         }
