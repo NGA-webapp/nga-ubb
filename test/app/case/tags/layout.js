@@ -24,7 +24,7 @@ define(function (require, exports, module) {
       output = '<a href="#!/topic/12756413">sth</a>';
       test(ubb, text, output);
       text = '[pid=12756413,234234]sth[/pid]';
-      output = 'sth';
+      output = '<a href="javascript:void(0);">sth</a>';
       test(ubb, text, output);
     });
   };

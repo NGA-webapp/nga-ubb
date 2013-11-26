@@ -48,7 +48,7 @@ define(function (require, exports) {
     tagName: 'pid',
     isPair: true,
     parser: function (content) {
-      return content;
+      return '<a href="javascript:void(0);">' + content + '</a>';
     },
     priority: 3,
   };

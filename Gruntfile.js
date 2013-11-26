@@ -30,11 +30,11 @@ module.exports = function (grunt) {
     watch: {
       libs: {
         files: 'libs/**/**',
-        tasks: ['test']
+        tasks: ['_dev']
       },
       tests: {
         files: 'test/**/**',
-        tasks: ['test']
+        tasks: ['_dev']
       }
     }
   });
@@ -45,6 +45,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
+  grunt.registerTask('_dev', ['test', 'webapp']);
   grunt.registerTask('webapp', ['clean', 'copy']);
   grunt.registerTask('test', ['mocha']);
   grunt.registerTask('dev', ['watch']);
