@@ -20,7 +20,12 @@ define(function (require, exports, module) {
       text = '[code]sth[/code]';
       output = '<pre class="prettyprint"><code>sth</code></pre>';
       test(ubb, text, output);
-      
+      text = '[tid=12756413]sth[/tid]';
+      output = '<a href="#!/topic/12756413">sth</a>';
+      test(ubb, text, output);
+      text = '[pid=12756413,234234]sth[/pid]';
+      output = 'sth';
+      test(ubb, text, output);
     });
   };
 });
