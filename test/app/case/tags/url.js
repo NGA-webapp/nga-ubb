@@ -11,6 +11,9 @@ define(function (require, exports, module) {
       text = '[url=foobar]baz[/url]';
       output = '<a href="foobar" target="_blank">baz</a>';
       test(ubb, text, output);
+      text = '[url]foobar[/url]';
+      output = '<a href="foobar" target="_blank">foobar</a>';
+      test(ubb, text, output);
     });
   };
 });
