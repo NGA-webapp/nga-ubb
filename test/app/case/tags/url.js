@@ -9,10 +9,10 @@ define(function (require, exports, module) {
         });
       };
       text = '[url=foobar]baz[/url]';
-      output = '<a class="url" data-url="foobar" href="javascript:void(0);" target="_blank">baz</a>';
+      output = '<a class="url" href="foobar" target="_system">baz</a>';
       test(ubb, text, output);
       text = '[url]foobar[/url]';
-      output = '<a class="url" data-url="foobar" href="javascript:void(0);" target="_blank">foobar</a>';
+      output = '<a class="url" href="foobar" target="_system">foobar</a>';
       test(ubb, text, output);
     });
   };
