@@ -23,8 +23,8 @@ define(function (require, exports, module) {
       text = '[tid=12756413]sth[/tid]';
       output = '<a href="#!/topic/12756413">sth</a>';
       test(ubb, text, output);
-      text = '[pid=12756413,234234]sth[/pid]';
-      output = '<a href="javascript:void(0);">sth</a>';
+      text = 'asdf[pid=12756413,234234]sth[/pid]df';
+      output = 'asdfdf';
       test(ubb, text, output);
     });
   };
