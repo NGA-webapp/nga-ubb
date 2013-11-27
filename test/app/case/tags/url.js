@@ -9,7 +9,7 @@ define(function (require, exports, module) {
         });
       };
       text = '[url=foobar]baz[/url]';
-      output = '<a href="foobar">baz</a>';
+      output = '<a href="foobar" target="_blank">baz</a>';
       test(ubb, text, output);
     });
   };
