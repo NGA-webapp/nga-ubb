@@ -51,7 +51,7 @@ add方法接受一个tag配置对象，包含以下参数
 
     tagName: 标签名  
     isPair: 标签是否成对出现  
-    parser: 解析该标签的方法，成对标签将传入参数(content, attrs)，而非成对标签则传入参数(attrs)  
+    parser: 解析该标签的方法，成对标签将传入参数(content, attrs, settings)，而非成对标签则传入参数(attrs, settings)  
     priority: 标签处理优先级，值越大越先处理，可以不填，默认为`1`  
 
 其中parser传入的attrs参数为以下形式
@@ -78,6 +78,10 @@ Example:
       },
       priority: 2,
     });
+
+在parser中，另外一个参数settings，由最顶级的接口``Ubb.protoype.toHtml``传入，一般情景下可忽略。
+其主要可用于显示/隐藏图片等情景。
+关于该参数，更详细的说明将在后续补上。
 
 
 #### 添加特殊标签
