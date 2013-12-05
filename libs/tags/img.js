@@ -2,7 +2,7 @@ define(function (require, exports) {
   var img = {
     tagName: 'img',
     isPair: true,
-    parser: function (content, settings) {
+    parser: function (content, attrs, settings) {
       // todo: ajsize
       var image;
       if (typeof settings === 'object' && settings.downloadImage === false) {
