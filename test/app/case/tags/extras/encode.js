@@ -8,6 +8,7 @@ define(function (require, exports, module) {
           });
         });
       };
+      var text, output;
       text = '&amp;';
       output = '&';
       test(ubb, text, output);

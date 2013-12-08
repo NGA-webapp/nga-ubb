@@ -8,6 +8,7 @@ define(function (require, exports, module) {
           });
         });
       };
+      var text, output;
       text = '<br>';
       output = '<br/>';
       test(ubb, text, output);

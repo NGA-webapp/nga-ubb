@@ -8,6 +8,7 @@ define(function (require, exports, module) {
           });
         });
       };
+      var text, output;
       text = '[s:7]';
       output = '<img src="http://img4.ngacn.cc/ngabbs/post/smile/cool.gif" />';
       test(ubb, text, output);

@@ -8,6 +8,7 @@ define(function (require, exports, module) {
           });
         });
       };
+      var text, output;
       text = '[list]a[/list]';
       output = '<ul><li>a</li></ul>';
       test(ubb, text, output);

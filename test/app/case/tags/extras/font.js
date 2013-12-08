@@ -9,6 +9,7 @@ define(function (require, exports, module) {
         });
       };
       describe('hExtra', function () {
+        var text, output;
         text = '======';
         output = '<h4></h4>';
         test(ubb, text, output);

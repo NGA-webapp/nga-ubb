@@ -8,6 +8,7 @@ define(function (require, exports, module) {
           });
         });
       };
+      var text, output;
       text = '[url=foobar]baz[/url]';
       output = '<a class="url" data-url="foobar" href="javascript:void(0);">baz</a>';
       test(ubb, text, output);

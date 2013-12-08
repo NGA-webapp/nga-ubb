@@ -8,6 +8,7 @@ define(function (require, exports, module) {
           });
         });
       };
+      var text, output;
       text = '[b]sth here.[/b]';
       output = '<b>sth here.</b>';
       test(ubb, text, output);
