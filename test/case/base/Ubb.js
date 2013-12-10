@@ -29,6 +29,44 @@
           expect(Ubb()).to.be.an.instanceof(Ubb);
         });
       });
+      describe('add(), addExtra()', function () {
+        it('could add single tag', function () {
+          var ubb;
+          ubb = new Ubb();
+          ubb.add(testTag.pair);
+          ubb.add(testTag.single);
+          ubb.addExtra(testExtraTag.testExtra);
+          ubb.addExtra(testExtraTag.testExtraException);
+          expect(ubb._tags.length).to.be.equal(4);
+        });
+        it('should work with adding single tag', function () {
+          var ubb, text, output;
+          ubb = new Ubb();
+          ubb.add(testTag.pair);
+          ubb.add(testTag.single);
+          ubb.addExtra(testExtraTag.testExtra);
+          ubb.addExtra(testExtraTag.testExtraException);
+          text = '[test]sth here.[/test]';
+          output = '<div class="test">sth here.</div>';
+          expect(ubb.toHtml(text)).to.be.equal(output);
+        });
+        it('could add a group of tags', function () {
+          var ubb;
+          ubb = new Ubb();
+          ubb.add([testTag.pair, testTag.single]);
+          ubb.addExtra([testExtraTag.testExtra, testExtraTag.testExtraException]);
+          expect(ubb._tags.length).to.be.equal(4);
+        });
+        it('should work with adding a group of tags', function () {
+          var ubb, text, output;
+          ubb = new Ubb();
+          ubb.add([testTag.pair, testTag.single]);
+          ubb.addExtra([testExtraTag.testExtra, testExtraTag.testExtraException]);
+          text = '[test]sth here.[/test]';
+          output = '<div class="test">sth here.</div>';
+          expect(ubb.toHtml(text)).to.be.equal(output);
+        });
+      });
       describe('.toHtml()', function () {
         var test = function (ubb, text, output) {
           describe(text, function () {
