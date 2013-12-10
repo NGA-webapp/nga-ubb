@@ -13,6 +13,14 @@
     throw new Error('module required');
   }
 })(function (require, exports, module) {
+  var chai, expect;
+  if (this.chai) {
+    chai = this.chai;
+    expect = this.expect;
+  } else {
+    chai = require('chai');
+    expect = chai.expect;
+  }
   module.exports = function (getAttrs) {
     describe('getAttrs', function () {
       var attrStr, output;

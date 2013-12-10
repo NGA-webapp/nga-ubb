@@ -6,6 +6,9 @@ module.exports = function (grunt) {
     mocha: {
       cmd: ['test/cmd/index.html']
     },
+    mochacli: {
+      node: ['test/node/app.js']
+    },
     jscoverage: {
       options: {
         inputDirectory: 'libs',
@@ -52,6 +55,7 @@ module.exports = function (grunt) {
   });
 
   grunt.loadNpmTasks('grunt-mocha');
+  grunt.loadNpmTasks('grunt-mocha-cli');
   grunt.loadNpmTasks("grunt-jscoverage");
   grunt.loadNpmTasks("grunt-contrib-clean");
   grunt.loadNpmTasks('grunt-contrib-copy');
@@ -59,7 +63,9 @@ module.exports = function (grunt) {
 
   grunt.registerTask('_dev', ['test', 'webapp']);
   grunt.registerTask('webapp', ['clean:webapp', 'copy:webapp']);
-  grunt.registerTask('test', ['copy:test', 'mocha:cmd', 'clean:test']);
+  grunt.registerTask('test', ['copy:test', 'mocha:cmd', 'mochacli:node', 'clean:test']);
+  grunt.registerTask('test-cmd', ['copy:test', 'mocha:cmd', 'clean:test']);
+  grunt.registerTask('test-node', ['copy:test', 'mochacli:node', 'clean:test']);
   grunt.registerTask('dev', ['watch']);
   grunt.registerTask('cov', ['jscoverage']);
 };

@@ -13,8 +13,16 @@
     throw new Error('module required');
   }
 })(function (require, exports, module) {
+  var chai, expect, sinon;
+  if (this.chai) {
+    chai = this.chai;
+    expect = this.expect;
+  } else {
+    chai = require('chai');
+    expect = chai.expect;
+  }
+  sinon = this.sinon || require('sinon');
   module.exports = function (Ubb, testTag, testExtraTag, utils) {
-  console.log(utils);
     describe('Ubb', function () {
       describe('Ubb()', function () {
         it('should instanceof Ubb', function () {
