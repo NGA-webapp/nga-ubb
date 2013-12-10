@@ -1,6 +1,6 @@
 define(function (require, exports, module) {
-  var utils = require('../../../../../../libs/utils');
-  return function (Ubb, testTag, testExtraTag) {
+  return function (Ubb, testTag, testExtraTag, utils) {
+  console.log(utils);
     describe('Ubb', function () {
       describe('Ubb()', function () {
         it('should instanceof Ubb', function () {

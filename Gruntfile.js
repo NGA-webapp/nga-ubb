@@ -4,7 +4,7 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     mocha: {
-      all: ['test/index.html']
+      cmd: ['test/cmd/index.html']
     },
     jscoverage: {
       options: {
