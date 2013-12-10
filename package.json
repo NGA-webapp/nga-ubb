@@ -14,7 +14,7 @@
     "grunt-mocha-cli": "~1.4.0"
   },
   "scripts": {
-    "test": "grunt test",
+    "test": "grunt test-node",
     "coveralls": "jscoverage lib && YOURPACKAGE_COVERAGE=1 nodeunit --reporter=lcov test | coveralls"
   },
   "dependencies": {
