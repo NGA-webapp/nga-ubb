@@ -1,0 +1,43 @@
+;(function (definition) {
+  // this is considered "safe":
+  var hasDefine = typeof define === 'function',
+    // hasDefine = typeof define === 'function',
+    hasExports = typeof module !== 'undefined' && module.exports;
+  if (hasDefine) {
+    // AMD Module or CMD Module
+    define(definition);
+  } else if (hasExports) {
+    // Node.js Module
+    definition(require, exports, module);
+  } else {
+    throw new Error('module required');
+  }
+})(function (require, exports, module) {
+  module.exports = function (ubb) {
+    describe('list', function () {
+      var test = function (ubb, text, output) {
+        describe(text, function () {
+          it('should be ' + output, function () {
+            expect(ubb.toHtml(text)).to.be.equal(output);
+          });
+        });
+      };
+      var text, output;
+      text = '[list]a[/list]';
+      output = '<ul><li>a</li></ul>';
+      test(ubb, text, output);
+      text = '[list][*]a[/list]';
+      output = '<ul><li>a</li></ul>';
+      test(ubb, text, output);
+      text = '[list][*]a[*]b[/list]';
+      output = '<ul><li>a</li><li>b</li></ul>';
+      test(ubb, text, output);
+      text = '[list]a[*]b[*]c[/list]';
+      output = '<ul><li>a</li><li>b</li><li>c</li></ul>';
+      test(ubb, text, output);
+      text = '[list]a[*]b[*]c[*][/list]';
+      output = '<ul><li>a</li><li>b</li><li>c</li></ul>';
+      test(ubb, text, output);
+    });
+  };
+});
