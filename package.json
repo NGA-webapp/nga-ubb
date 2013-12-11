@@ -4,17 +4,17 @@
   "author": "yelo",
   "devDependencies": {
     "grunt": "~0.4.1",
-    "grunt-mocha": "~0.4.1",
     "grunt-jscoverage": "0.0.3",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-copy": "~0.4.1",
     "grunt-contrib-watch": "~0.5.3",
     "sinon": "~1.7.3",
     "chai": "~1.8.1",
-    "grunt-mocha-cli": "~1.4.0"
+    "grunt-mocha-cli": "~1.4.0",
+    "grunt-mocha-phantomjs": "~0.3.2"
   },
   "scripts": {
-    "test": "grunt test-node",
+    "test": "grunt test",
     "coveralls": "jscoverage lib && YOURPACKAGE_COVERAGE=1 nodeunit --reporter=lcov test | coveralls"
   },
   "dependencies": {

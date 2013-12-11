@@ -1,7 +1,12 @@
 seajs.config({
 
-  base: './app',
+  base: '.',
 
-  charset: 'utf-8'
+  charset: 'utf-8',
+
+  alias: {
+    'chai': 'asset/chai',
+    'sinon': 'asset/sinon-1.7.1'
+  }
 
 });

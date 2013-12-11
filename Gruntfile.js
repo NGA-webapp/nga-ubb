@@ -3,7 +3,10 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    mocha: {
+    mocha_phantomjs: {
+      options: {
+        reporter: 'dot'
+      },
       cmd: ['test/cmd/index.html']
     },
     mochacli: {
@@ -54,7 +57,7 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.loadNpmTasks('grunt-mocha');
+  grunt.loadNpmTasks('grunt-mocha-phantomjs');
   grunt.loadNpmTasks('grunt-mocha-cli');
   grunt.loadNpmTasks("grunt-jscoverage");
   grunt.loadNpmTasks("grunt-contrib-clean");
@@ -63,8 +66,8 @@ module.exports = function (grunt) {
 
   grunt.registerTask('_dev', ['test', 'webapp']);
   grunt.registerTask('webapp', ['clean:webapp', 'copy:webapp']);
-  grunt.registerTask('test', ['copy:test', 'mocha:cmd', 'mochacli:node', 'clean:test']);
-  grunt.registerTask('test-cmd', ['copy:test', 'mocha:cmd', 'clean:test']);
+  grunt.registerTask('test', ['copy:test', 'mocha_phantomjs:cmd', 'mochacli:node', 'clean:test']);
+  grunt.registerTask('test-cmd', ['copy:test', 'mocha_phantomjs:cmd', 'clean:test']);
   grunt.registerTask('test-node', ['copy:test', 'mochacli:node', 'clean:test']);
   grunt.registerTask('dev', ['watch']);
   grunt.registerTask('cov', ['jscoverage']);
