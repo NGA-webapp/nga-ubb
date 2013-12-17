@@ -198,3 +198,7 @@ nga标签类型繁多，但实际使用覆盖率低，因此优先处理常用�
     - [armory] 魔兽世界人物信息
     - [url] Diablo3人物信息
 
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/imyelo/nga-ubb/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
