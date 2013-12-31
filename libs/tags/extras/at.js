@@ -3,6 +3,7 @@
   var hasDefine = typeof define === 'function',
     // hasDefine = typeof define === 'function',
     hasExports = typeof module !== 'undefined' && module.exports;
+
   if (hasDefine) {
     // AMD Module or CMD Module
     define(definition);
@@ -13,15 +14,10 @@
     throw new Error('module required');
   }
 })(function (require, exports, module) {
-  module.exports = function (ubb) {
-    describe('tags', function () {
-      require('./font')(ubb);
-      require('./layout')(ubb);
-      require('./list')(ubb);
-      require('./img')(ubb);
-      require('./url')(ubb);
-      require('./flash')(ubb);
-      require('./extras/index')(ubb);
-    });
+  var at = {
+    regExp: new RegExp(/\[@(\w*)\]/gi),
+    replacement: '<a class="ubb-at" data-username="$1" src="javascript:;">{@$1}</a>'
   };
+
+  exports.at = at;
 });
