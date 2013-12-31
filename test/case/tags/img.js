@@ -33,16 +33,16 @@
       // todo: active dom
       var text, output, setting;
       text = '[img]wrongurl[/img]';
-      output = '<img src="wrongurl" onerror="" />';
+      output = '<img data-preload="wrongurl" onerror="" />';
       test(ubb, text, output);
       text = '[img]http://img4.ngacn.cc/ngabbs/post/smile/06.gif[/img]';
-      output = '<img src="http://img4.ngacn.cc/ngabbs/post/smile/06.gif" onerror="" />';
+      output = '<img data-preload="http://img4.ngacn.cc/ngabbs/post/smile/06.gif" onerror="" />';
       test(ubb, text, output);
       text = '[img]./ngabbs/post/smile/06.gif[/img]';
-      output = '<img src="http://img6.ngacn.cc/attachments/ngabbs/post/smile/06.gif" onerror="" />';
+      output = '<img data-preload="http://img6.ngacn.cc/attachments/ngabbs/post/smile/06.gif" onerror="" />';
       test(ubb, text, output);
       text = '[img]/ngabbs/post/smile/06.gif[/img]';
-      output = '<img src="http://img6.ngacn.cc/attachments/ngabbs/post/smile/06.gif" onerror="" />';
+      output = '<img data-preload="http://img6.ngacn.cc/attachments/ngabbs/post/smile/06.gif" onerror="" />';
       test(ubb, text, output);
       text = '[img]/ngabbs/post/smile/06.gif[/img]';
       output = '<img/>';
