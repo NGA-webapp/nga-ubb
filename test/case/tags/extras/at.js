@@ -34,6 +34,15 @@
       text = '[@zhihuzeye]';
       output = '<a class="ubb-at" data-username="zhihuzeye" src="javascript:;">{@zhihuzeye}</a>';
       test(ubb, text, output);
+      text = '[@我怎能不变态]';
+      output = '<a class="ubb-at" data-username="我怎能不变态" src="javascript:;">{@我怎能不变态}</a>';
+      test(ubb, text, output);
+      text = '[@我怎能_123不变态]';
+      output = '<a class="ubb-at" data-username="我怎能_123不变态" src="javascript:;">{@我怎能_123不变态}</a>';
+      test(ubb, text, output);
+      text = '[@我怎能-不变态]';
+      output = '[@我怎能-不变态]';
+      test(ubb, text, output);
     });
   };
 });
