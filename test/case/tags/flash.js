@@ -32,7 +32,7 @@
       };
       var text, output;
       text = '[flash]http://v.youku.com/v_show/id_XNjU0OTA5MjM2_ev_1.html[/flash]';
-      output = '<div class="ubb-flash" data-url="http://v.youku.com/v_show/id_XNjU0OTA5MjM2_ev_1.html"></div>';
+      output = '<div class="ubb-flash" data-url="http://v.youku.com/v_show/id_XNjU0OTA5MjM2_ev_1.html"><div class="ubb-flash-control"><i class="glyphicon glyphicon-play"></i></div></div>';
       test(ubb, text, output);
     });
   };
