@@ -37,6 +37,18 @@
       text = '[s:499]';
       output = '<img src="" />';
       test(ubb, text, output);
+      text = '[s:0:7]';
+      output = '<img src="http://img4.ngacn.cc/ngabbs/post/smile/cool.gif" />';
+      test(ubb, text, output);
+      text = '[s:ac:羞]';
+      output = '<img src="http://img4.ngacn.cc/ngabbs/post/smile/ac36.png" />';
+      test(ubb, text, output);
+      text = '[s:ac:不存在的表情]';
+      output = '<img src="" />';
+      test(ubb, text, output);
+      text = '[s:noop:12]';
+      output = '<img src="" />';
+      test(ubb, text, output);
     });
   };
 });
