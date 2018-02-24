@@ -10,7 +10,7 @@
 ### 业务环境
 除了环境中默认包含的[seajs](https://github.com/seajs/seajs)以外，不依赖任何第三方类库。  
 ### 开发环境
-测试依赖于[mocha](http://visionmedia.github.com/mocha/) + [chai](http://chaijs.com/api/bdd/) (bdd) + [sinon](http://sinonjs.org/docs/)。  
+测试依赖于[mocha](http://mochajs.org/) + [chai](http://chaijs.com/api/bdd/) (bdd) + [sinon](http://sinonjs.org/docs/)。  
 以及自动化工具依赖于[Grunt](http://gruntjs.com/)。
 
 ## Usage
